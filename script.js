@@ -1,7 +1,6 @@
 // QUICK EDIT ---------------------------------------------------------------
 const PROJECT = {
-  twitterUrl: "https://x.com/",
-  pumpUrl: "https://pump.fun/coin/",
+  twitterUrl: "https://x.com/higher4k",
   contractAddress: "contract address"
 };
 // --------------------------------------------------------------------------
