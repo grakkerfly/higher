@@ -68,38 +68,19 @@ function makeChaosLayers() {
   });
 }
 
-let memeMedia = [];
-// On a custom domain, fill owner/repo/path. Standard github.io URLs are detected.
-const GITHUB_MEMES = { owner: 'grakkerfly', repo: 'grakkerfly.github.io', path: 'assets/memes', branch: '' };
-async function loadMemeMedia() {
-  const grid = document.querySelector('#memeGrid');
-  grid.textContent = 'Loading memes...';
-  try {
-    const githubHost = location.hostname.endsWith('.github.io');
-    const owner = GITHUB_MEMES.owner || (githubHost ? location.hostname.split('.')[0] : '');
-    const segments = location.pathname.split('/').filter(Boolean);
-    const repo = GITHUB_MEMES.repo || (githubHost ? (segments[0] && !segments[0].includes('.') ? segments[0] : owner + '.github.io') : '');
-    if (!owner || !repo) throw new Error('Set GITHUB_MEMES owner and repo in script.js for local preview or a custom domain.');
-    const mediaURL = new URL(ASSET + 'memes/', location.href);
-    let folder = decodeURIComponent(mediaURL.pathname).replace(/^\/+|\/+$/g, '');
-    if (folder.startsWith(repo + '/')) folder = folder.slice(repo.length + 1);
-    folder = GITHUB_MEMES.path || folder;
-    const endpoint = 'https://api.github.com/repos/' + encodeURIComponent(owner) + '/' + encodeURIComponent(repo) + '/contents/' + folder.split('/').map(encodeURIComponent).join('/') + (GITHUB_MEMES.branch ? '?ref=' + encodeURIComponent(GITHUB_MEMES.branch) : '');
-    const response = await fetch(endpoint, {headers:{Accept:'application/vnd.github+json'}});
-    if (!response.ok) throw new Error('GitHub returned ' + response.status + '. Check repository, folder and API rate limit.');
-    const entries = await response.json();
-    if (!Array.isArray(entries)) throw new Error('The configured path is not a folder.');
-    const image = /\.(jpe?g|png|gif|webp|avif|bmp|svg)$/i;
-    const movie = /\.(mp4|webm|ogv|mov)$/i;
-    memeMedia = entries.filter(item => item.type === 'file' && (image.test(item.name) || movie.test(item.name)))
-      .sort((a,b) => a.name.localeCompare(b.name, 'en', {numeric:true}))
-      .map(item => ({file:item.name, type:movie.test(item.name) ? 'video' : 'image', url:item.download_url}));
-    grid.textContent = '';
-    makeMemeGallery();
-  } catch (error) {
-    grid.textContent = 'Could not load memes. Please try again later.';
-    console.error('Meme gallery:', error.message);
-  }
+// Explicit list of files in assets/memes. No GitHub API or generated index.
+const memeMedia = [
+  {file:'1.jpg',type:'image'},
+  {file:'1.mp4',type:'video'},
+  {file:'2.jpg',type:'image'},
+  {file:'2.mov',type:'video'},
+  {file:'3.jpg',type:'image'},
+  {file:'3.mp4',type:'video'},
+  ...Array.from({length:17}, (_,i) => ({file:(i+4)+'.jpg',type:'image'}))
+];
+function loadMemeMedia() {
+  document.querySelector('#memeGrid').textContent = '';
+  makeMemeGallery();
 }
 function mediaElement(item, preview = false) {
   const element = document.createElement(item.type === 'video' ? 'video' : 'img');
@@ -269,6 +250,7 @@ function flyHeMen(time) {
   flyingFrame = requestAnimationFrame(flyHeMen);
 }
 flyingFrame = requestAnimationFrame(flyHeMen);
+
 
 
 
