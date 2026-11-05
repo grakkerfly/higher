@@ -1,7 +1,7 @@
 // QUICK EDIT ---------------------------------------------------------------
 const PROJECT = {
   twitterUrl: "https://x.com/higher4k",
-  contractAddress: "8gTaAKyrnqDFeUKxoSacbMBCpJHaMfWEcbgd1E3eFqLt"
+  contractAddress: "contract address"
 };
 // --------------------------------------------------------------------------
 
